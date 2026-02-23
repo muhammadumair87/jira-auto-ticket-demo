@@ -1,6 +1,5 @@
-import requests
 import os
-import json
+import requests
 
 JIRA_URL = os.environ["JIRA_URL"]
 EMAIL = os.environ["JIRA_EMAIL"]
@@ -10,20 +9,34 @@ PROJECT_KEY = os.environ["JIRA_PROJECT"]
 def create_ticket():
     url = f"{JIRA_URL}/rest/api/3/issue"
 
+    auth = (EMAIL, API_TOKEN)
+
     headers = {
         "Accept": "application/json",
         "Content-Type": "application/json"
     }
-
-    auth = (EMAIL, API_TOKEN)
 
     payload = {
         "fields": {
             "project": {
                 "key": PROJECT_KEY
             },
-            "summary": "🚨 Security Issue Detected via CI Pipeline",
-            "description": "Automated scan detected a potential vulnerability.",
+            "summary": "🚨 Security Vulnerability Detected via CI",
+            "description": {
+                "type": "doc",
+                "version": 1,
+                "content": [
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Automated CI scan detected a critical vulnerability."
+                            }
+                        ]
+                    }
+                ]
+            },
             "issuetype": {
                 "name": "Task"
             }
@@ -35,5 +48,4 @@ def create_ticket():
     print("Status:", response.status_code)
     print(response.text)
 
-if __name__ == "__main__":
-    create_ticket()
+create_ticket()
