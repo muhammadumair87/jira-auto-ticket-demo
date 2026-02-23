@@ -1,17 +1,15 @@
+import sys
 import random
 
 def run_scan():
-    print("Running security scan...")
-
-    # Simulate detection
     vulnerability_detected = random.choice([True, False])
 
     if vulnerability_detected:
-        print("CRITICAL: Hardcoded password found!")
-        return True
+        print("CRITICAL: Vulnerability detected!")
+        sys.exit(1)  # Fails pipeline
     else:
-        print("No vulnerabilities found.")
-        return False
+        print("Scan clean.")
+        sys.exit(0)
 
 if __name__ == "__main__":
     run_scan()
