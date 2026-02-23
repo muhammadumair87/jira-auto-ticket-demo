@@ -22,10 +22,12 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run Security Scan
+        id: scan
         run: python security_scan.py
         continue-on-error: true
 
-      - name: DEBUG - Create Jira Ticket Always
+      - name: Create Jira Ticket
+        if: steps.scan.outcome == 'failure'
         run: python create_jira_ticket.py
         env:
           JIRA_URL: ${{ secrets.JIRA_URL }}
