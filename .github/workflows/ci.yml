@@ -28,10 +28,13 @@ jobs:
         continue-on-error: true
 
       - name: Save Scan Result
-        run: echo "SCAN_FAILED=${{ steps.scan.outcome }}" >> $GITHUB_ENV
+        run: echo "SCAN_RESULT=${{ steps.scan.conclusion }}" >> $GITHUB_ENV
+
+      - name: Debug Scan Result
+        run: echo "Scan result is $SCAN_RESULT"
 
       - name: Create Jira Ticket
-        if: env.SCAN_FAILED == 'failure'
+        if: env.SCAN_RESULT == 'failure'
         run: python create_jira_ticket.py
         env:
           JIRA_URL: ${{ secrets.JIRA_URL }}
