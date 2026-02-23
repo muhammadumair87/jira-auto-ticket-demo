@@ -25,14 +25,16 @@ jobs:
         id: scan
         run: |
           python security_scan.py
-          echo "EXIT_CODE=$?" >> $GITHUB_ENV
         continue-on-error: true
 
       - name: Debug Exit Code
-        run: echo "Exit code was $EXIT_CODE"
+        if: always()
+        run: |
+          echo "Scan outcome: ${{ steps.scan.outcome }}"
+          echo "Scan conclusion: ${{ steps.scan.conclusion }}"
 
       - name: Create Jira Ticket
-        if: env.EXIT_CODE == '1'
+        if: always() && steps.scan.conclusion == 'failure'
         run: python create_jira_ticket.py
         env:
           JIRA_URL: ${{ secrets.JIRA_URL }}
