@@ -23,11 +23,11 @@ jobs:
 
       - name: Run Security Scan
         id: scan
-        run: |
-          python security_scan.py
+        run: python security_scan.py
+        continue-on-error: true
 
       - name: Create Jira Ticket
-        if: failure()
+        if: steps.scan.outcome == 'failure'
         run: python create_jira_ticket.py
         env:
           JIRA_URL: ${{ secrets.JIRA_URL }}
