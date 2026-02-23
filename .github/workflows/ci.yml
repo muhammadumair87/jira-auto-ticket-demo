@@ -27,7 +27,7 @@ jobs:
         continue-on-error: true
 
       - name: Create Jira Ticket
-        if: steps.scan.outcome == 'failure'
+        if: steps.scan.conclusion == 'failure'
         run: python create_jira_ticket.py
         env:
           JIRA_URL: ${{ secrets.JIRA_URL }}
