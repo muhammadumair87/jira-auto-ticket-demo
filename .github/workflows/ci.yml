@@ -23,11 +23,15 @@ jobs:
 
       - name: Run Security Scan
         id: scan
-        run: python security_scan.py
+        run: |
+          python security_scan.py
         continue-on-error: true
 
+      - name: Save Scan Result
+        run: echo "SCAN_FAILED=${{ steps.scan.outcome }}" >> $GITHUB_ENV
+
       - name: Create Jira Ticket
-        if: steps.scan.conclusion == 'failure'
+        if: env.SCAN_FAILED == 'failure'
         run: python create_jira_ticket.py
         env:
           JIRA_URL: ${{ secrets.JIRA_URL }}
