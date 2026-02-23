@@ -26,13 +26,7 @@ jobs:
         run: |
           python security_scan.py
         continue-on-error: true
-
-      - name: Debug Exit Code
-        if: always()
-        run: |
-          echo "Scan outcome: ${{ steps.scan.outcome }}"
-          echo "Scan conclusion: ${{ steps.scan.conclusion }}"
-
+        
       - name: Create Jira Ticket
         if: always() && steps.scan.outcome == 'failure'
         run: python create_jira_ticket.py
